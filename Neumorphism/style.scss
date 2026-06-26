@@ -1,0 +1,181 @@
+// --- Design Tokens ---
+$bg: #e0e5ec;
+$primary: #6d5dfc;
+$danger: #ff5e5e;
+$text: #44474a;
+$white: #ffffff;
+
+// Professional Shadow Logic
+$shadow-dark: mix($bg, #000, 85%);
+$shadow-light: mix($bg, #fff, 20%); // Stronger highlight for realism
+
+// --- Mixins ---
+@mixin nm-outset($radius: 12px) {
+  background: $bg;
+  box-shadow: 
+    9px 9px 16px $shadow-dark, 
+    -9px -9px 16px $shadow-light;
+  border-radius: $radius;
+}
+
+@mixin nm-inset($radius: 12px) {
+  background: $bg;
+  box-shadow: 
+    inset 6px 6px 10px $shadow-dark, 
+    inset -6px -6px 10px $shadow-light;
+  border-radius: $radius;
+}
+
+// --- Base Styles ---
+body {
+  background-color: $bg;
+  font-family: 'Inter', sans-serif;
+  color: $text;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 40px 20px;
+}
+
+.stage { width: min(1000px, 100%); }
+
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+  h1 { font-size: 2.5rem; margin-bottom: 8px; font-weight: 600; }
+  .subtitle { opacity: 0.6; }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.card {
+  @include nm-outset(30px);
+  padding: 30px;
+  h2 { font-size: 1rem; margin-bottom: 24px; opacity: 0.5; text-transform: uppercase; letter-spacing: 1px; }
+}
+
+.flex-row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+
+// --- Button Components ---
+.nm-btn {
+  @include nm-outset(12px);
+  border: none;
+  padding: 14px 28px;
+  cursor: pointer;
+  color: $text;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+
+  &:hover {
+    color: $primary;
+    transform: translateY(-2px);
+  }
+
+  &:active, &.active {
+    @include nm-inset(12px);
+    transform: translateY(0);
+    color: darken($primary, 10%);
+  }
+
+  &--primary { color: $primary; }
+  &--danger { color: $danger; }
+
+  &--circle { width: 55px; height: 55px; border-radius: 50%; padding: 0; }
+  &--square { width: 55px; height: 55px; border-radius: 15px; padding: 0; }
+}
+
+// --- Interactive Toggle Switch ---
+.nm-switch {
+  input { display: none; }
+  &-label {
+    @include nm-inset(50px);
+    width: 70px;
+    height: 35px;
+    display: block;
+    position: relative;
+    cursor: pointer;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 5px; left: 5px;
+      width: 25px; height: 25px;
+      background: linear-gradient(135deg, $white, darken($bg, 10%));
+      border-radius: 50%;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+      transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+  }
+
+  input:checked + .nm-switch-label::after {
+    left: 40px;
+    background: $primary;
+    box-shadow: 0 0 10px rgba($primary, 0.5);
+  }
+}
+
+// --- Segmented Control ---
+.nm-toggle-group {
+  @include nm-inset(12px);
+  padding: 6px;
+  display: flex;
+  gap: 4px;
+
+  .nm-toggle-btn {
+    border: none;
+    background: transparent;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: mix($text, $bg, 40%);
+    cursor: pointer;
+    transition: 0.3s;
+
+    &.active {
+      @include nm-outset(8px);
+      background: $bg;
+      color: $primary;
+    }
+  }
+}
+
+// --- Forms ---
+.nm-input {
+  @include nm-inset(12px);
+  border: none;
+  width: 100%;
+  padding: 16px;
+  outline: none;
+  color: $text;
+  font-family: inherit;
+
+  &::placeholder { color: mix($text, $bg, 30%); }
+}
+
+.nm-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  @include nm-inset(50px);
+  outline: none;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    @include nm-outset(50%);
+    background: $primary;
+    cursor: pointer;
+    border: 3px solid $bg;
+  }
+}
